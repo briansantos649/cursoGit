@@ -1,0 +1,33 @@
+git --version: verificar la version de git
+git config --global user.name "Brian Santos": configurar usuario usuario para usar en los movimientos en git
+git config --global user.email "briansantos649@gmail.com": configurar email para usar en los movimientos en git
+git config --global -e: comando para abrir archivo de configuracion del usuario
+
+
+git branch: nos indica en que rama nos encontramos trabajando
+git branch -m master main: comando para cambiar el nombre de una rama
+git config --global init.defaultBranch main: asignar un nombre por default a la rama principal de los repositorios abrir        
+                                             a los que se les realice seguimiento.
+
+git init: comando para inicializar un repositorio nuevo de manera local, dar seguimiento a un repositorio
+git status: proporciona info de los archivos que no se esta dando seguimiento, rama en la que se encuentra, si hay algun 
+            commit realizado.
+            no muestra carpetas vacias
+git config --global alias.s status --short: crear alias
+
+git log: nos muestra los commits realizados historicamente, tambien muestra hacia cual commit esta apuntando nuestra
+         rama main.
+
+
+git add .: comando usado para agregar comando al stage de git, para que git realice seguimiento de estos,
+           estan listos para hacerles commit.
+git reset NOMBRE_ARCHIVO: Baja del stage el archivo, git dejara de darle seguimiento
+git commit -m "Primer commit": comando usado para realizar un commit de los cambios, guardar los cambios en nuestro 
+                               branch local
+git commit -am "Readme actualizado": comando para agregar, hacer commit sl mismo tiempo, solo se puede hacer esto
+                                     a los archivos que ya se les esta dando seguimiento.
+git checkout -- .: nos reestablece el repositorio con los cambios del ultimo commit realizado, solo lo hace con los archivo
+                    los cuales git les esta dando seguimiento por medio del comando "git add ."
+
+
+
