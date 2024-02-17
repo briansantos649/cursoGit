@@ -14,20 +14,104 @@ git status: proporciona info de los archivos que no se esta dando seguimiento, r
             commit realizado.
             no muestra carpetas vacias
 git config --global alias.s status --short: crear alias
-
 git log: nos muestra los commits realizados historicamente, tambien muestra hacia cual commit esta apuntando nuestra
          rama main.
-
+git diff:   nos muestra la diferencia de cambios realizados entre la version actual de un archivo que no ha
+            sido agregado al stage y la version del ultimo commit
+git diff --staged: hace lo mismo que el anterior pero comparando los cambios actuales de stage con el ultimo
+                    commit.
 
 git add .: comando usado para agregar comando al stage de git, para que git realice seguimiento de estos,
            estan listos para hacerles commit.
 git reset NOMBRE_ARCHIVO: Baja del stage el archivo, git dejara de darle seguimiento
 git commit -m "Primer commit": comando usado para realizar un commit de los cambios, guardar los cambios en nuestro 
                                branch local
-git commit -am "Readme actualizado": comando para agregar, hacer commit sl mismo tiempo, solo se puede hacer esto
+git commit -am "Readme actualizado": comando para agregar y hacer commit sl mismo tiempo, solo se puede hacer esto
                                      a los archivos que ya se les esta dando seguimiento.
-git checkout -- .: nos reestablece el repositorio con los cambios del ultimo commit realizado, solo lo hace con los archivo
-                    los cuales git les esta dando seguimiento por medio del comando "git add ."
+git checkout -- .: descarta los cambios del directorio de trbajo que aun no fueron agregados al stage, no afecta
+                    los cambios que ya esten subidos en stage.
 
 
+git commit --amend -m "modificacion de mensaje": sirve para actualizar el mensaje del ultimo commit realizado
+git reset --soft HEAD^: elimina el ultimo commit de la rama actual, y los cambios de este los coloca en
+                        el stage.(Procurar no usar este comando muy seguido, no es ideal)
+git reset --mixed HEAD^: es similar al anterior, pero los cambios los deja abajo del stage, listos para realizar
+                         git add. (los cambios se mantienen en el directorio de trabajo)
+git reset --hard HEAD^: es similar al anterior, pero los cambios realizados en los commits anteriores tambien 
+                        los elimina, asi como tambien del directorio de trabajo
+git reset --hard: deshace los cambios guardados en stage y en el directorio de trabajo, regresando al
+                  a los ultimos cambios del commit actual.
+                        
+git reflog:  nos muestra un log de todos los cambios realizados en los commits, incluso los que fueron 
+             eliminados debido a los comandos anteriores, "git reset", es similar a git log pero tambien
+             muestra los commits que ya no se muestran por que se regreso en el timepo
+git mv .\destruir-mundo.md salvar-mundo.md: sirve para renombrar un archivo, y lo coloca en el stage listo
+                                            para realizar commit.
+git rm .\salvar-mundo.md: sirve para eliminar archivos en el directorio de trabajo, asi como archivos que se
+                          encuentren en stage, si al archivo ya se le esta dando seguimiento, la eliminacion
+                          se tendra que confirmar con un commit ya que el cambio de eliminacion se encontrara 
+                          en el stage.
 
+**** Cuando Renombramos ó eliminamos desde algun editor de texto y no consola ***
+      1. cuando renombramos un archivo tenemos que hacer git add nombre_archivo para que git se de cuenta que 
+      que el archivo fue renombrado y lo considere como un cambio de rename, de lo controrio creera que es
+      un archivo diferente y la version del archivo anterior se perdera, esto es cuando renombras un archivo 
+      desde el editor.
+
+      2. cuando eliminamos un archivo desde el editor, este cambio no estara en stage, por lo que tenemos que
+         agregarlo a stage "git add nombre_archivo" y despues realizar commit.
+*****************************************************************************************
+
+branch: es una version paralela de la rama principal en la cual podemos realizar cambios que requieren modificar varios archivos
+        y no estamos seguros si seran los cambios definitivos, normalmente se crea para hacer ciertas pruebas, una vez confirmado
+        que todo esta bien, estos cambios se mueven a la rama principal.
+
+git branch: nos permite ver todas las ramas actuales asi como la rama en la cual nos encontramos localizados
+git branch nombre_rama: comando usado paracrear una rama nueva
+git checkout rama-villanos: nos permite movernos a una rama diferente
+git checkout -b rama-villanos: nos permite crear una rama y movernos hacia ella en un solo movimiento
+git branch -d rama-villanos: nos permite eliminar una rama existente en la cual ya no trabajaremos, si esta tuviera algun
+                              cambio que no ha sido unificada a alguna otra rama, git nos advertira de esto, para forzar la
+                              eliminacion, solo tenemos que colocar -f al final.
+
+***Tipos de Merge ***
+
+Fast Forward: ocurre cuando se unen dos ramas sin problema debido a que 
+
+
+git merge rama-villanos: nos permite combinar los cambios entre dos ramas, la rama en la que nos encontremos en ese movimientos
+                         sera la que reciba los cambios de la que se espesifica en el comando despues de merge.
+
+conflictos: ocurren cuando queremos unir dos ramas las cuales tienen archivos cuyas mismas lineas fueron modificadas
+            y git no puede solucionar este conflicto por su cuenta, por lo que el usuario tiene que analizar los cambios
+            en los archivos de ambas ramas y determinar cuales seran los cambios a considerar.
+
+Tags: Es una referencia espesifica a un punto espesifico/commit en la historia de un repositorio, se usan comunmente
+      para acceder de manera mas rapida al commit.
+git tag super-tag: crea un tag en el ultmimo commit de la rama actual
+git tag -d super-release: eliminar tag
+git tag -a v1.0.0 -m "Version 1.0.0 lista": crea un tag en el commit actual y adicionalmente agrega un mensaje
+git tag: nos muestra los tags actuales
+git show nombre_tag: muestra mas detalle de un tag en particular.
+
+
+*** git stash***
+Nos permite guardar cambios de manera temporal que se encuentran en el directorio de trabajo en el area de staging
+la cual podremos usar posteriormente. este comando normalmente se utiliza cuando no queremos realizar commit ni tampoco
+perderlos, los stash solo se debrian de usar de manera temporal, lo ideal es no usarlo muy seguido.
+
+
+git stash: nos permite crear un stash nuevo
+git stash save "Agregamos Loki en villanos": creamos un stash nuevo, pero con comentarios, lo cual nos permitira
+                                             identificar un stash en particular de manera facil
+git stash list: nos muestra los stash creados actualmente
+git stash list --stat: nos muestra mas detalle de los stash en la pila de stash
+git stash pop: nos regresa de nuevo los cambios guardados en la pila stash en la posicion 0,
+               despues elimina los cambios de la pila
+git stash clear: limpia la pila de los stash, elimina todos, pero podriamos recuperarlos usando git reflog 
+git stash apply "stash@{2}": nos permite regresar a un stash en particular que se encuentra en la pila de stash
+git stash drop "stash@{0}": nos permite eliminar un stash espesifico de la pila de stash
+git stash show "stash@{1}": nos permite ver detalle de un stash en partilar de la pila de stash
+
+
+Nota: cuando se realizan stash, tambien podrian ocurrir conflictos
