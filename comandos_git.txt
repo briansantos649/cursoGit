@@ -16,10 +16,11 @@ git status: proporciona info de los archivos que no se esta dando seguimiento, r
 git config --global alias.s status --short: crear alias
 git log: nos muestra los commits realizados historicamente, tambien muestra hacia cual commit esta apuntando nuestra
          rama main.
-git diff:   nos muestra la diferencia de cambios realizados entre la version actual de un archivo que no ha
+
+   nos muestra la diferencia de cambios realizados entre la version actual de un archivo que no ha
             sido agregado al stage y la version del ultimo commit
 git diff --staged: hace lo mismo que el anterior pero comparando los cambios actuales de stage con el ultimo
-                    commit.
+                    commit.(diff se puede usar tambien para comparar ramas y commits)
 
 git add .: comando usado para agregar comando al stage de git, para que git realice seguimiento de estos,
            estan listos para hacerles commit.
@@ -67,19 +68,42 @@ branch: es una version paralela de la rama principal en la cual podemos realizar
         que todo esta bien, estos cambios se mueven a la rama principal.
 
 git branch: nos permite ver todas las ramas actuales asi como la rama en la cual nos encontramos localizados
-git branch nombre_rama: comando usado paracrear una rama nueva
+git branch nombre_rama: comando usado para crear una rama nueva
 git checkout rama-villanos: nos permite movernos a una rama diferente
 git checkout -b rama-villanos: nos permite crear una rama y movernos hacia ella en un solo movimiento
 git branch -d rama-villanos: nos permite eliminar una rama existente en la cual ya no trabajaremos, si esta tuviera algun
                               cambio que no ha sido unificada a alguna otra rama, git nos advertira de esto, para forzar la
                               eliminacion, solo tenemos que colocar -f al final.
 
+
+git push --set-upstream origin rama-villanos: 
+git pull --all: traemos todas las ramas creadas en el repositorio remoto(Puede que sean ramas creadas por otros comparando
+                 ñeros)
+git branch -a: nos muestra las ramas creadas localmente asi como las ramas obtenidas del repositorio remoto, para
+               obtener las ramas en el repositorio remoto primero tenemos que ejecutar git pull --all
+git remote prune origin: se utiliza para eliminar referencias locales a ramas remotas que ya no existen en el 
+                         repositorio remoto llamado "origin". Esto es útil cuando has eliminado ramas en el 
+                         repositorio remoto pero tus referencias locales a esas ramas aún existen en tu repositorio
+                         local. El comando "prune" elimina estas referencias locales obsoletas.
+
+Eliminar rama en repositorio local y github por medio de git: 
+      1. git branch -d rama-kitkat
+      2. git push origin :rama-kitkat
+
+***Recuperar rama eliminada de todas partes!!!***
+
+
+
+***Feature Branch***
+es cuando un integrante del equipo crea una nueva rama para trabajar en ella y posteriormente integrarla al main branch
+
+
 ***Tipos de Merge ***
 
 Fast Forward: ocurre cuando se unen dos ramas sin problema debido a que 
 
 
-git merge rama-villanos: nos permite combinar los cambios entre dos ramas, la rama en la que nos encontremos en ese movimientos
+git merge rama-villanos: nos permite combinar los cambios entre dos ramas, la rama en la que nos encontremos en ese momento
                          sera la que reciba los cambios de la que se espesifica en el comando despues de merge.
 
 conflictos: ocurren cuando queremos unir dos ramas las cuales tienen archivos cuyas mismas lineas fueron modificadas
@@ -93,12 +117,14 @@ git tag -d super-release: eliminar tag
 git tag -a v1.0.0 -m "Version 1.0.0 lista": crea un tag en el commit actual y adicionalmente agrega un mensaje
 git tag: nos muestra los tags actuales
 git show nombre_tag: muestra mas detalle de un tag en particular.
+git push --tags: nos ayuda a mover al repositorio remoto todos los tags creados en el repositorio local
 
 
 *** git stash***
-Nos permite guardar cambios de manera temporal que se encuentran en el directorio de trabajo en el area de staging
+Nos permite guardar cambios de manera temporal que se encuentran en el directorio de trabajo y el area de staging
 la cual podremos usar posteriormente. este comando normalmente se utiliza cuando no queremos realizar commit ni tampoco
-perderlos, los stash solo se debrian de usar de manera temporal, lo ideal es no usarlo muy seguido.
+perderlos, los stash solo se debrian de usar de manera temporal, lo ideal es no usarlo muy seguido, es mejor crear
+ramas.
 
 
 git stash: nos permite crear un stash nuevo
@@ -110,8 +136,143 @@ git stash pop: nos regresa de nuevo los cambios guardados en la pila stash en la
                despues elimina los cambios de la pila
 git stash clear: limpia la pila de los stash, elimina todos, pero podriamos recuperarlos usando git reflog 
 git stash apply "stash@{2}": nos permite regresar a un stash en particular que se encuentra en la pila de stash
+                              este comando no elimina el stash de la pila de stash.
 git stash drop "stash@{0}": nos permite eliminar un stash espesifico de la pila de stash
 git stash show "stash@{1}": nos permite ver detalle de un stash en partilar de la pila de stash
 
 
 Nota: cuando se realizan stash, tambien podrian ocurrir conflictos
+
+git rebase master: supongamos que estamos posicionados en un rama secundaria donde ya tenemos cambios y queremos
+                   traer los cambios mas recientes de la rama master, con git rebase traeremos todos los cambios del
+                   ultimo commit de la rama master y los colocara debajo de nuestro primer commit de nuestra rama
+                   secundaria, una vez hecho esto podriamos movernos a la rama master y hacer un merge de la rama
+                   secundaria, esto generaria un fast forward debido a que la ultima informacion en la rama master
+                   es la misma que en la rama secundaria, normalmente haremos esto para tener una secuencia de cambio
+                   de manera mas lineal, sin muchas bifurcaciones.
+Nota: Procurar solo usar rebase para aquellos cambios commits que solo existen en el repositorio local, si el commit
+      involucrado en el rebase ya fue desplegado al repositorio remoto, lo ideal es ya no hacer cambios porque podriamos
+      podriamos generar que ocurran conflictos a otros compañeros que esten trabajando en el mismo repositorio
+ 
+git rebase -i HEAD~4: Sirve para realizar una reorganización interactiva (Interactive Rebase) de los últimos cuatro
+                      commits en tu rama actual. Al ejecutar este comando, se abrirá un editor de texto que muestra
+                      una lista de los últimos cuatro commits junto con las opciones para cada uno.
+tenemos varias opciones como hacer squash entre dos o mas commits ó reword para renombrar un commit, edit para separar
+los cambios de un commit entre dos o mas commits
+
+
+***GitHub***
+Plataforma de desarrollo colaborativo basada en la web que utiliza el sistema de control de versiones Git
+***
+
+git remote add origin https://...: Vincula un repositorio local de git a un repositorio remoto de GitHub,
+                                    u otra plataforma de alojamiento de git, "origin" es el nombre que se le asignar
+                                    a la conexion, por estandar siempre se llama origen, pero puedes usar el que desees.
+git remote -v: Nos muestra las fuentes/origenes remotos.
+git push -u origin master: Sirve para enviar los cambios locales de la rama "master" a la rama correspondiente en el
+                           repositorio remoto vinculado con el nombre "origin".
+-u: Nos ayuda a que la poxima vez que queramos hacer push, no necesitemos espesificar la rama nuevamente.
+
+git push --tags: comando usado para mover los tags creados del repositorio local al repositorio remoto de GitHub.
+
+
+***Release en GitHub***
+Es una versión específica de un proyecto que se ha marcado como un hito significativo y se ha publicado para que 
+otros usuarios lo descarguen y utilicen. Los lanzamientos suelen incluir una versión estable de un software junto
+con notas de lanzamiento que describen las nuevas características, mejoras, correcciones de errores y cualquier
+ otro detalle relevante sobre esa versión.
+
+
+git pull: Fusiona los cambios existentes en el directorio remoto hacia el directorio local (es la cambinacion de dos
+          comandos, git fetch y git merge)
+conflictos con git pull: esto ocurre cuando realizamos cambios de las mismas lineas en los mismos archivo en el repositorio
+                         local y remoto, y esto genera problemas al cominar los cambios.
+
+git config --global pull.ff only: configuracion usada para espesificar que los pull request sean de tipo fast-forward,
+                                  ya que si ocurre algun conflicto entre el repositorio local y remoto podemos
+                                  resolverlo manualmente.
+git config --global pull.rebase true: se configura el rebase por defecto cuando se realizan pulls
+git config --global pull.ff false: comando para desactivar la estrategia fastforward, en caso que queramos aplicar
+                                   un rebase con git pull, de lo contrario, no lo permitira.
+git config pull.rebase true: nos permite manejar los conflictos ocurridos cuando se realiza un pull, por medio de 
+                             un rebase.
+git clone https://github.com/briansantos649/liga-justicia.git: nos permite clonar un repositorio remoto a nuestra maquina
+                                                               local, la difencia entre clonar y descargar el proyecto
+                                                               directamente de github, es que cuando lo descargamos, no
+                                                               contendra informacion del historial de los cambios en Git
+                                                               (Esto se hace cuando en nuestra maquina local no tenemos
+                                                               alguna copia existente del remositorio remoto).
+fork: en GitHub, es una copia exacta de un repositorio tomada por un usuario para su uso propio y desarrollo
+      normalmente crearemos un fork cuando queramos trabajar en un repositorio publico en el cual no somos colaboradores
+      se creara una copia exacta donde podremos trabajar y hacer cambios en la copia.
+
+pull request: cuando creamos un fork de un repositorio en el cual no somos colaboradores y queremos proponer una posible
+              mejora ó solucion a un problema, podemos crear un pull request en github para que el owner del repositorio
+              original pueda tomar órechazar nuestras sugerencias.
+
+
+git fetch:  descargar los cambios del repositorio remoto a tu repositorio local. A diferencia del comando git pull,
+            que descarga los cambios y fusiona automáticamente cualquier cambio remoto en tu rama local, git fetch
+            solo descarga los cambios remotos al repositorio origen local (Origin/main) sin fusionarlos automáticamente.
+             Después de ejecutar git fetch, puedes inspeccionar los cambios descargados y decidir si quieres 
+             fusionarlos en tu rama local usando comandos como git merge y git rebase, o si simplemente quieres 
+             dejarlos como están. Esto te da más control sobre cómo manejar los cambios remotos y te permite 
+             revisarlos antes de fusionarlos en tu rama local.
+                                                      
+git remote add upstream https://github.com/Klerith/legion-del-mal.git: comando para crear una nueva fuente para repositorio
+                                                                       remoto, normalmente hacemos esto cuando creamos un fork
+                                                                       y queremos actualizar el repositorio que tenemos en nuestra
+                                                                       cuenta de github y despues los descargamos a nuestro repositorio
+                                                                       local, pero obteniendo los cambios por medio de
+                                                                       git, por linea de comandos.
+                                                                       (Tener en cuenta que cuando intentamos acceder
+                                                                       a un repositorio en el cual no somos miembros, solo
+                                                                       podremos realizar pull a este)
+"upstream es el nombre que se asigna por convencion a una fuente de origen remota en la cual solo obtendremos informacion
+y no podremos hacer push"    
+
+issue en github: es una función que permite a los colaboradores de un proyecto de software realizar un seguimiento
+                 de tareas, errores, solicitudes de funciones y otros temas relacionados con el desarrollo del 
+                 proyecto. Los "issues" proporcionan una forma estructurada de comunicar problemas y discutir 
+                 soluciones dentro de un proyecto, lo que facilita la colaboración entre los miembros del equipo y 
+                 la comunidad de código abierto
+
+ git commit -am "Fixes #4: Hecho, borre a la Capitan Marvel": Cuando se abre un issue en github, nosotros podemos
+                           cerrarlo por medio de este comando usando git, lo importante a mencionar aqui son los come-
+                           ntarios, por regla debe iniciar con "Fixed #issue que se muestra en github: y los comentarios
+                           adicionales. 
+
+label en github: son una característica que permite categorizar y organizar los "issues", las solicitudes de 
+                 extracción (pull requests) y los comentarios dentro de un repositorio. Estas etiquetas se utilizan
+                 para identificar y clasificar rápidamente los problemas, las mejoras, las tareas pendientes, los 
+                 errores y otros tipos de elementos dentro de un proyecto.
+
+Milestone en github: es una característica que permite agrupar y seguir el progreso de un conjunto de issues y pull 
+                     requests relacionados en un proyecto. Los "milestones" ayudan a los equipos a organizar y 
+                     gestionar el trabajo por fases o metas específicas, lo que facilita el seguimiento del progreso
+                     y la planificación del desarrollo.      
+
+
+GitHub Pages: es una funcionalidad que proporcina github para crear paginas web que contengan solo codigo de frontend
+              que posteriormente podra ser accedido de manera publica, usaualmente esto se utiliza para crear portafilios
+
+gist en GitHub: es un repositorio pequeño y autónomo que puede contener un solo archivo o varios archivos, como 
+                código fuente, scripts, notas, documentos, etc.   
+                Los gists son útiles para compartir y colaborar en fragmentos de código o ideas de manera rápida y 
+                sencilla, sin la necesidad de crear un repositorio completo.    
+
+     *** Para poder acceder a tus gists personales desde visual studio, tenemos que hacer los siguientes pasos***
+      1. Instalar el plugin de gist en visual studio,(puedes instalar el que fue creado por Jen Howard)
+      2. Seleccionar view -> Command Palette ->seleccionar "gist: Select Profile"
+            . Nos pedira un token de acceso, para generarlo, nos dirigimos a nuestra cuenta de git y hacemos click en:
+                  1. Foto ezquina superior derecha -> settings -> opcion "Developer Settings" en parte inferior izquierda
+                     -> Personal access token -> token classic
+                  2. en parte derecha, en campo Note "vs-code-gist", puedes poner el nombre que desees
+                  3. seleccionar gist como opcion en los checkboxes
+                  4. presionar "Generate Token"
+                  5. se generara un nuevo token el cual tenemos que guardar ya que no se podra acceder a el nuevamente,
+                     en mi caso es "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",
+      3. El token generado lo escribimos en el paso 2, una vez guardado, vamos nuevamente a 
+         view -> Command Palette ->seleccionar "gist: Open Gist", alli podremos ver y abrir los gist guardados en nuestra cuenta de
+         GitHub.
+
